@@ -64,4 +64,26 @@ describe('utils', () => {
       {start: 0, end: 7}
     ])
   })
+
+  it('should support case sensitive matches', () => {
+    let rawChunks = Chunks.findChunks({
+      caseSensitive: true,
+      searchWords: ['t'],
+      textToHighlight: TEXT
+    })
+    expect(rawChunks).to.eql([
+      {start: 11, end: 12},
+      {start: 19, end: 20},
+      {start: 28, end: 29}
+    ])
+
+    rawChunks = Chunks.findChunks({
+      caseSensitive: true,
+      searchWords: ['T'],
+      textToHighlight: TEXT
+    })
+    expect(rawChunks).to.eql([
+      {start: 0, end: 1}
+    ])
+  })
 })

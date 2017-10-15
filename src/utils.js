@@ -4,6 +4,7 @@
  */
 export const findAll = ({
   autoEscape,
+  caseSensitive = false,
   sanitize,
   searchWords,
   textToHighlight
@@ -12,6 +13,7 @@ export const findAll = ({
     chunksToHighlight: combineChunks({
       chunks: findChunks({
         autoEscape,
+        caseSensitive,
         sanitize,
         searchWords,
         textToHighlight
@@ -59,6 +61,7 @@ export const combineChunks = ({
  */
 export const findChunks = ({
   autoEscape,
+  caseSensitive,
   sanitize = identity,
   searchWords,
   textToHighlight
@@ -74,7 +77,7 @@ export const findChunks = ({
         searchWord = escapeRegExpFn(searchWord)
       }
 
-      const regex = new RegExp(searchWord, 'gi')
+      const regex = new RegExp(searchWord, caseSensitive ? 'g' : 'gi')
 
       let match
       while ((match = regex.exec(textToHighlight))) {
