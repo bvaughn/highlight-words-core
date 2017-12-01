@@ -42,9 +42,6 @@
       "it"
     ]
   },
-  "dependencies": {
-    "babel-runtime": "^6.11.6"
-  },
   "devDependencies": {
     "babel-cli": "6.8.0",
     "babel-core": "^6.5.1",
@@ -56,6 +53,7 @@
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-es2015-rollup": "^1.1.1",
     "babel-preset-stage-1": "^6.5.0",
+    "babel-runtime": "^6.11.6",
     "cross-env": "^1.0.7",
     "expect.js": "^0.3.1",
     "latinize": "^0.3.0",
