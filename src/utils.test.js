@@ -86,4 +86,25 @@ describe('utils', () => {
       {start: 0, end: 1}
     ])
   })
+
+  it('should handle zero-length matches correctly', () => {
+    let rawChunks = Chunks.findChunks({
+        caseSensitive: true,
+        searchWords: ['.*'],
+        textToHighlight: TEXT
+    })
+    expect(rawChunks).to.eql([
+        {start: 0, end: 38}
+    ])
+
+    rawChunks = Chunks.findChunks({
+        caseSensitive: true,
+        searchWords: ['w?'],
+        textToHighlight: TEXT
+    })
+    expect(rawChunks).to.eql([
+        {start: 17, end: 18},
+        {start: 22, end: 23},
+    ])
+  })
 })
