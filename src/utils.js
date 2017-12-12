@@ -19,7 +19,7 @@ export const findAll = ({
         textToHighlight
       })
     }),
-    totalLength: textToHighlight.length
+    totalLength: textToHighlight ? textToHighlight.length : 0
   })
 )
 
