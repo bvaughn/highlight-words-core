@@ -6,6 +6,19 @@ describe('utils', () => {
   // Positions: 01234567890123456789012345678901234567
   const TEXT = 'This is a string with words to search.'
 
+  it('should handle empty or null textToHighlight', () => {
+    let result = Chunks.findAll({
+        searchWords: ['search'],
+        textToHighlight: ''
+    });
+    expect(result.length).to.equal(0)
+
+    result = Chunks.findAll({
+        searchWords: ['search']
+    });
+    expect(result.length).to.equal(0)
+  })
+
   it('should highlight all occurrences of a word, regardless of capitalization', () => {
     const rawChunks = Chunks.findChunks({
       searchWords: ['th'],
