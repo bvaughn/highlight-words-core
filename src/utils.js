@@ -81,10 +81,18 @@ export const findChunks = ({
 
       let match
       while ((match = regex.exec(textToHighlight))) {
-        chunks.push({
-          start: match.index,
-          end: regex.lastIndex
-        })
+        let start = match.index
+        let end = regex.lastIndex
+        // We do not return zero-length matches
+        if (end > start) {
+          chunks.push({start, end})
+        }
+
+        // Prevent browsers like Firefox from getting stuck in an infinite loop
+        // See http://www.regexguru.com/2008/04/watch-out-for-zero-length-matches/
+        if (match.index == regex.lastIndex) {
+          regex.lastIndex++
+        }
       }
 
       return chunks
