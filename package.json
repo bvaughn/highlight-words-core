@@ -10,7 +10,7 @@
     "lint": "standard",
     "prebuild": "rimraf dist",
     "prepublish": "npm run build",
-    "test": "mocha --compilers js:babel-register src/**/*.test.js"
+    "test": "mocha --compilers js:babel-register \"src/**/*.test.js\""
   },
   "keywords": [
     "highlighter",
