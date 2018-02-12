@@ -5,6 +5,7 @@
 export const findAll = ({
   autoEscape,
   caseSensitive = false,
+  findChunks = findChunks,
   sanitize,
   searchWords,
   textToHighlight
