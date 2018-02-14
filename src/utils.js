@@ -5,14 +5,14 @@
 export const findAll = ({
   autoEscape,
   caseSensitive = false,
-  findChunks = findChunks,
+  customFindChunks = findChunks,
   sanitize,
   searchWords,
   textToHighlight
 }) => (
   fillInChunks({
     chunksToHighlight: combineChunks({
-      chunks: findChunks({
+      chunks: customFindChunks({
         autoEscape,
         caseSensitive,
         sanitize,
