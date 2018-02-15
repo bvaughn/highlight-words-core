@@ -121,18 +121,29 @@ describe('utils', () => {
     ])
   })
 
-  it('should use customFindChunks', () => {
-    const filledInChunks = Chunks.findAll({
-      customFindChunks: () => (
-       [{start: 2, end: 5}]
+  it('should use custom findChunks', () => {
+    let filledInChunks = Chunks.findAll({
+      findChunks: () => (
+       [{start: 1, end: 3}]
       ),
       searchWords: ['xxx'],
       textToHighlight: TEXT
     })
     expect(filledInChunks).to.eql([
-      {start: 0, end: 2, highlight: false},
-      {start: 2, end: 5, highlight: true},
-      {start: 5, end: 38, highlight: false}
+      {start: 0, end: 1, highlight: false},
+      {start: 1, end: 3, highlight: true},
+      {start: 3, end: 38, highlight: false}
+    ])
+
+    filledInChunks = Chunks.findAll({
+      findChunks: () => (
+       []
+      ),
+      searchWords: ['This'],
+      textToHighlight: TEXT
+    })
+    expect(filledInChunks).to.eql([
+      {start: 0, end: 38, highlight: false}
     ])
   })
 })

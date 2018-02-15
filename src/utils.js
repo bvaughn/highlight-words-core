@@ -5,14 +5,14 @@
 export const findAll = ({
   autoEscape,
   caseSensitive = false,
-  customFindChunks = findChunks,
+  findChunks = defaultFindChunks,
   sanitize,
   searchWords,
   textToHighlight
 }) => (
   fillInChunks({
     chunksToHighlight: combineChunks({
-      chunks: customFindChunks({
+      chunks: findChunks({
         autoEscape,
         caseSensitive,
         sanitize,
@@ -60,7 +60,7 @@ export const combineChunks = ({
  * If we find matches, add them to the returned array as a "chunk" object ({start:number, end:number}).
  * @return {start:number, end:number}[]
  */
-export const findChunks = ({
+const defaultFindChunks = ({
   autoEscape,
   caseSensitive,
   sanitize = identity,
@@ -99,6 +99,9 @@ export const findChunks = ({
       return chunks
     }, [])
 }
+// Allow the findChunks to be overridden in findAll,
+// but for backwards compatibility we export as the old name
+export {defaultFindChunks as findChunks}
 
 /**
  * Given a set of chunks to highlight, create an additional set of chunks
