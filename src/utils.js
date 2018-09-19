@@ -69,6 +69,8 @@ const defaultFindChunks = ({
 }) => {
   textToHighlight = sanitize(textToHighlight)
 
+  const regexMap = {};
+
   return searchWords
     .filter(searchWord => searchWord) // Remove empty words
     .reduce((chunks, searchWord) => {
@@ -78,7 +80,14 @@ const defaultFindChunks = ({
         searchWord = escapeRegExpFn(searchWord)
       }
 
-      const regex = new RegExp(searchWord, caseSensitive ? 'g' : 'gi')
+      let regex;
+      if (regexMap[searchWord]) {
+        regex = regexMap[searchWord];
+      } else {
+        //cache the regex and use it
+        regex = new RegExp(searchWord, caseSensitive ? 'g' : 'gi');
+        regexMap[searchWord] = regex;
+      }
 
       let match
       while ((match = regex.exec(textToHighlight))) {
