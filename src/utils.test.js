@@ -8,14 +8,14 @@ describe('utils', () => {
 
   it('should handle empty or null textToHighlight', () => {
     let result = Chunks.findAll({
-        searchWords: ['search'],
-        textToHighlight: ''
-    });
+      searchWords: ['search'],
+      textToHighlight: ''
+    })
     expect(result.length).to.equal(0)
 
     result = Chunks.findAll({
-        searchWords: ['search']
-    });
+      searchWords: ['search']
+    })
     expect(result.length).to.equal(0)
   })
 
@@ -25,8 +25,8 @@ describe('utils', () => {
       textToHighlight: TEXT
     })
     expect(rawChunks).to.eql([
-      {start: 0, end: 2},
-      {start: 19, end: 21}
+      {start: 0, end: 2, highlight: false},
+      {start: 19, end: 21, highlight: false}
     ])
   })
 
@@ -38,8 +38,8 @@ describe('utils', () => {
       })
     })
     expect(combinedChunks).to.eql([
-      {start: 0, end: 4},
-      {start: 5, end: 7}
+      {start: 0, end: 4, highlight: false},
+      {start: 5, end: 7, highlight: false}
     ])
   })
 
@@ -63,7 +63,7 @@ describe('utils', () => {
       textToHighlight: '(This is text)'
     })
     expect(rawChunks).to.eql([
-      {start: 9, end: 14}
+      {start: 9, end: 14, highlight: false}
     ])
   })
 
@@ -74,7 +74,7 @@ describe('utils', () => {
       textToHighlight: 'ỆᶍǍᶆṔƚÉ'
     })
     expect(rawChunks).to.eql([
-      {start: 0, end: 7}
+      {start: 0, end: 7, highlight: false}
     ])
   })
 
@@ -85,9 +85,9 @@ describe('utils', () => {
       textToHighlight: TEXT
     })
     expect(rawChunks).to.eql([
-      {start: 11, end: 12},
-      {start: 19, end: 20},
-      {start: 28, end: 29}
+      {start: 11, end: 12, highlight: false},
+      {start: 19, end: 20, highlight: false},
+      {start: 28, end: 29, highlight: false}
     ])
 
     rawChunks = Chunks.findChunks({
@@ -96,28 +96,28 @@ describe('utils', () => {
       textToHighlight: TEXT
     })
     expect(rawChunks).to.eql([
-      {start: 0, end: 1}
+      {start: 0, end: 1, highlight: false}
     ])
   })
 
   it('should handle zero-length matches correctly', () => {
     let rawChunks = Chunks.findChunks({
-        caseSensitive: true,
-        searchWords: ['.*'],
-        textToHighlight: TEXT
+      caseSensitive: true,
+      searchWords: ['.*'],
+      textToHighlight: TEXT
     })
     expect(rawChunks).to.eql([
-        {start: 0, end: 38}
+        {start: 0, end: 38, highlight: false}
     ])
 
     rawChunks = Chunks.findChunks({
-        caseSensitive: true,
-        searchWords: ['w?'],
-        textToHighlight: TEXT
+      caseSensitive: true,
+      searchWords: ['w?'],
+      textToHighlight: TEXT
     })
     expect(rawChunks).to.eql([
-        {start: 17, end: 18},
-        {start: 22, end: 23},
+        {start: 17, end: 18, highlight: false},
+        {start: 22, end: 23, highlight: false}
     ])
   })
 

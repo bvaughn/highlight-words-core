@@ -55,5 +55,8 @@
     "rimraf": "^2.4.3",
     "standard": "^7.0.1",
     "webpack": "^1.9.6"
+  },
+  "dependencies": {
+    "babel-preset-flow": "^6"
   }
 }

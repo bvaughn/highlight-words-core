@@ -1,3 +1,11 @@
+// @flow
+
+export type Chunk = {|
+  highlight: boolean,
+  start: number,
+  end: number,
+|};
+
 /**
  * Creates an array of chunk objects representing both higlightable and non highlightable pieces of text that match each search word.
  * @return Array of "chunks" (where a Chunk is { start:number, end:number, highlight:boolean })
@@ -9,7 +17,14 @@ export const findAll = ({
   sanitize,
   searchWords,
   textToHighlight
-}) => (
+}: {
+  autoEscape?: boolean,
+  caseSensitive?: boolean,
+  findChunks?: typeof defaultFindChunks,
+  sanitize?: typeof defaultSanitize,
+  searchWords: Array<string>,
+  textToHighlight: string,
+}): Array<Chunk> => (
   fillInChunks({
     chunksToHighlight: combineChunks({
       chunks: findChunks({
@@ -30,7 +45,9 @@ export const findAll = ({
  */
 export const combineChunks = ({
   chunks
-}) => {
+}: {
+  chunks: Array<Chunk>,
+}): Array<Chunk> => {
   chunks = chunks
     .sort((first, second) => first.start - second.start)
     .reduce((processedChunks, nextChunk) => {
@@ -44,7 +61,7 @@ export const combineChunks = ({
           // It may be the case that prevChunk completely surrounds nextChunk, so take the
           // largest of the end indeces.
           const endIndex = Math.max(prevChunk.end, nextChunk.end)
-          processedChunks.push({start: prevChunk.start, end: endIndex})
+          processedChunks.push({highlight: false, start: prevChunk.start, end: endIndex})
         } else {
           processedChunks.push(prevChunk, nextChunk)
         }
@@ -63,10 +80,16 @@ export const combineChunks = ({
 const defaultFindChunks = ({
   autoEscape,
   caseSensitive,
-  sanitize = identity,
+  sanitize = defaultSanitize,
   searchWords,
   textToHighlight
-}) => {
+}: {
+  autoEscape?: boolean,
+  caseSensitive?: boolean,
+  sanitize?: typeof defaultSanitize,
+  searchWords: Array<string>,
+  textToHighlight: string,
+}): Array<Chunk> => {
   textToHighlight = sanitize(textToHighlight)
 
   return searchWords
@@ -86,12 +109,12 @@ const defaultFindChunks = ({
         let end = regex.lastIndex
         // We do not return zero-length matches
         if (end > start) {
-          chunks.push({start, end})
+          chunks.push({highlight: false, start, end})
         }
 
         // Prevent browsers like Firefox from getting stuck in an infinite loop
         // See http://www.regexguru.com/2008/04/watch-out-for-zero-length-matches/
-        if (match.index == regex.lastIndex) {
+        if (match.index === regex.lastIndex) {
           regex.lastIndex++
         }
       }
@@ -113,7 +136,10 @@ export {defaultFindChunks as findChunks}
 export const fillInChunks = ({
   chunksToHighlight,
   totalLength
-}) => {
+}: {
+  chunksToHighlight: Array<Chunk>,
+  totalLength: number,
+}): Array<Chunk> => {
   const allChunks = []
   const append = (start, end, highlight) => {
     if (end - start > 0) {
@@ -139,10 +165,10 @@ export const fillInChunks = ({
   return allChunks
 }
 
-function identity (value) {
-  return value
+function defaultSanitize (string: string): string {
+  return string
 }
 
-function escapeRegExpFn (str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+function escapeRegExpFn (string: string): string {
+  return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
 }
