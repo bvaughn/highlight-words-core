@@ -13,6 +13,7 @@ export type Chunk = {|
 export const findAll = ({
   autoEscape,
   caseSensitive = false,
+  combineAdjacentChunks = true,
   findChunks = defaultFindChunks,
   sanitize,
   searchWords,
@@ -20,20 +21,29 @@ export const findAll = ({
 }: {
   autoEscape?: boolean,
   caseSensitive?: boolean,
+  combineAdjacentChunks?: boolean,
   findChunks?: typeof defaultFindChunks,
   sanitize?: typeof defaultSanitize,
   searchWords: Array<string>,
   textToHighlight: string,
 }): Array<Chunk> => (
   fillInChunks({
-    chunksToHighlight: combineChunks({
-      chunks: findChunks({
+    chunksToHighlight: combineAdjacentChunks
+    ? combineChunks({
+        chunks: findChunks({
+          autoEscape,
+          caseSensitive,
+          sanitize,
+          searchWords,
+          textToHighlight
+        })
+    })
+    : findChunks({
         autoEscape,
         caseSensitive,
         sanitize,
         searchWords,
         textToHighlight
-      })
     }),
     totalLength: textToHighlight ? textToHighlight.length : 0
   })
