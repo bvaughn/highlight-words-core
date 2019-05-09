@@ -11,6 +11,7 @@ export type Chunk = {|
  * @return Array of "chunks" (where a Chunk is { start:number, end:number, highlight:boolean })
  */
 export const findAll = ({
+  activeIndex,
   autoEscape,
   caseSensitive = false,
   findChunks = defaultFindChunks,
@@ -18,6 +19,7 @@ export const findAll = ({
   searchWords,
   textToHighlight
 }: {
+  activeIndex?: number,
   autoEscape?: boolean,
   caseSensitive?: boolean,
   findChunks?: typeof defaultFindChunks,
@@ -27,6 +29,7 @@ export const findAll = ({
 }): Array<Chunk> => (
   fillInChunks({
     chunksToHighlight: combineChunks({
+	  activeIndex,
       chunks: findChunks({
         autoEscape,
         caseSensitive,
@@ -44,8 +47,10 @@ export const findAll = ({
  * @return {start:number, end:number}[]
  */
 export const combineChunks = ({
+  activeIndex,
   chunks
 }: {
+  activeIndex?: number,
   chunks: Array<Chunk>,
 }): Array<Chunk> => {
   chunks = chunks
@@ -57,7 +62,7 @@ export const combineChunks = ({
       } else {
         // ... subsequent chunks get checked to see if they overlap...
         const prevChunk = processedChunks.pop()
-        if (nextChunk.start <= prevChunk.end) {
+        if (nextChunk.start <= prevChunk.end && activeIndex < 0) {
           // It may be the case that prevChunk completely surrounds nextChunk, so take the
           // largest of the end indeces.
           const endIndex = Math.max(prevChunk.end, nextChunk.end)
