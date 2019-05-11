@@ -43,6 +43,21 @@ describe('utils', () => {
     ])
   })
 
+  it('shouldn\'t highlight words that partially overlap if passed activeIndex', () => {
+    const combinedChunks = Chunks.combineChunks({
+      activeIndex: 1,
+      chunks: Chunks.findChunks({
+        searchWords: ['thi', 'is'],
+        textToHighlight: TEXT
+      })
+    })
+    expect(combinedChunks).to.eql([
+      {start: 0, end: 3, highlight: false},
+      {start: 2, end: 4, highlight: false},
+      {start: 5, end: 7, highlight: false}
+    ])
+  })
+
   it('should combine into the minimum number of marked and unmarked chunks', () => {
     const filledInChunks = Chunks.findAll({
       searchWords: ['thi', 'is'],
