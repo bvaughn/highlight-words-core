@@ -47,7 +47,7 @@ export const findAll = ({
  * @return {start:number, end:number}[]
  */
 export const combineChunks = ({
-  activeIndex,
+  activeIndex = -1,
   chunks
 }: {
   activeIndex?: number,
