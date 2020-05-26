@@ -44,6 +44,7 @@ The `findAll` function accepts several parameters, although only the `searchWord
 | sanitize |  | `Function` | Custom sanitize function (advanced) |
 | searchWords | ✅ | `Array<string>` | Array of words to search for |
 | textToHighlight | ✅ | `string` | Text to search and highlight |
+| htmlText        |    | `boolean`| The text is HTML and tags should not be highlighted |
 
 
 ## License

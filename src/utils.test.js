@@ -146,4 +146,81 @@ describe('utils', () => {
       {start: 0, end: 38, highlight: false}
     ])
   })
+
+  context('when htmlText is not set', () => {
+    it('finds chunks in the text and tags', () => {
+      let result = Chunks.findAll({
+        searchWords: ['strong'],
+        textToHighlight: '<p>There is <strong>some strong content</strong> in this paragraph</p>'
+      })
+
+      expect(result).to.eql([
+        { start: 0, end: 13, highlight: false },
+        { start: 13, end: 19, highlight: true },
+        { start: 19, end: 25, highlight: false },
+        { start: 25, end: 31, highlight: true },
+        { start: 31, end: 41, highlight: false },
+        { start: 41, end: 47, highlight: true },
+        { start: 47, end: 70, highlight: false }
+      ])
+    })
+  })
+
+  context('when htmlText is set to true', () => {
+    it('finds chunks in the text', () => {
+      let result = Chunks.findAll({
+        searchWords: ['content'],
+        textToHighlight: '<p>There is some content in this paragraph</p>',
+        htmlText: true
+      })
+
+      expect(result).to.eql([
+        { start: 0, end: 17, highlight: false },
+        { start: 17, end: 24, highlight: true },
+        { start: 24, end: 46, highlight: false }
+      ])
+    })
+
+    it('does not find chunks in the tags', () => {
+      let result = Chunks.findAll({
+        searchWords: ['strong'],
+        textToHighlight: '<p>There is <strong>some strong content</strong> in this paragraph</p>',
+        htmlText: true
+      })
+
+      expect(result).to.eql([
+        { start: 0, end: 25, highlight: false },
+        { start: 25, end: 31, highlight: true },
+        { start: 31, end: 70, highlight: false }
+      ])
+    })
+
+    it('does not find chunks in the tags metadata', () => {
+      let result = Chunks.findAll({
+        searchWords: ['strong'],
+        textToHighlight: '<p>There is <span class="strong">some strong content</span> in this paragraph</p>',
+        htmlText: true
+      })
+
+      expect(result).to.eql([
+        { start: 0, end: 38, highlight: false },
+        { start: 38, end: 44, highlight: true },
+        { start: 44, end: 81, highlight: false }
+      ])
+    })
+
+    it('support weird cases', () => {
+      let result = Chunks.findAll({
+        searchWords: ['strong'],
+        textToHighlight: '<p aria-strong=1>There is <span class="strong">some < not so stong > content</span> in this paragraph</p>',
+        htmlText: true
+      })
+
+      expect(result).to.eql([
+        { start: 0, end: 8, highlight: false },
+        { start: 8, end: 14, highlight: true },
+        { start: 14, end: 105, highlight: false }
+      ])
+    })
+  })
 })
