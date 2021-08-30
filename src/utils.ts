@@ -1,10 +1,8 @@
-// @flow
-
-export type Chunk = {|
+export type Chunk = {
   highlight: boolean,
   start: number,
   end: number,
-|};
+};
 
 /**
  * Creates an array of chunk objects representing both higlightable and non highlightable pieces of text that match each search word.
@@ -59,7 +57,7 @@ export const combineChunks = ({
         const prevChunk = processedChunks.pop()
         if (nextChunk.start <= prevChunk.end) {
           // It may be the case that prevChunk completely surrounds nextChunk, so take the
-          // largest of the end indeces.
+          // largest of the end indices.
           const endIndex = Math.max(prevChunk.end, nextChunk.end)
           processedChunks.push({highlight: false, start: prevChunk.start, end: endIndex})
         } else {
