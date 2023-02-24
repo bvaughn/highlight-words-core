@@ -170,5 +170,5 @@ function defaultSanitize (string: string): string {
 }
 
 function escapeRegExpFn (string: string): string {
-  return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+  return string.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
 }

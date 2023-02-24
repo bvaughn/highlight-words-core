@@ -66,6 +66,17 @@ describe('utils', () => {
       {start: 9, end: 14, highlight: false}
     ])
   })
+  
+  it('should handle unclosed square brackets when autoEscape prop is truthy', () => {
+    const rawChunks = Chunks.findChunks({
+      autoEscape: true,
+      searchWords: ['text['],
+      textToHighlight: ']This is text['
+    })
+    expect(rawChunks).to.eql([
+      {start: 9, end: 14, highlight: false}
+    ])
+  })
 
   it('should match terms without accents against text with accents', () => {
     const rawChunks = Chunks.findChunks({
