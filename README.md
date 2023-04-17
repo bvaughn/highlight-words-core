@@ -1,5 +1,9 @@
 Utility functions shared by [`react-highlight-words`](https://github.com/bvaughn/react-highlight-words) and [`react-native-highlight-words`](https://github.com/clauderic/react-native-highlight-words).
 
+---
+### 🎉 [Become a sponsor](https://github.com/sponsors/bvaughn/) or ☕ [Buy me a coffee](http://givebrian.coffee/)
+---
+
 ## API
 
 The primary API for this package is a function exported as `findAll`. This method searches a string of text for a set of search terms and returns an array of "chunks" that describe the matches found.
