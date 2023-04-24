@@ -16,7 +16,8 @@ export const findAll = ({
   findChunks = defaultFindChunks,
   sanitize,
   searchWords,
-  textToHighlight
+  textToHighlight,
+  htmlText
 }: {
   autoEscape?: boolean,
   caseSensitive?: boolean,
@@ -24,6 +25,7 @@ export const findAll = ({
   sanitize?: typeof defaultSanitize,
   searchWords: Array<string>,
   textToHighlight: string,
+  htmlText?: string
 }): Array<Chunk> => (
   fillInChunks({
     chunksToHighlight: combineChunks({
@@ -32,7 +34,8 @@ export const findAll = ({
         caseSensitive,
         sanitize,
         searchWords,
-        textToHighlight
+        textToHighlight,
+        htmlText
       })
     }),
     totalLength: textToHighlight ? textToHighlight.length : 0
@@ -82,15 +85,18 @@ const defaultFindChunks = ({
   caseSensitive,
   sanitize = defaultSanitize,
   searchWords,
-  textToHighlight
+  textToHighlight,
+  htmlText
 }: {
   autoEscape?: boolean,
   caseSensitive?: boolean,
   sanitize?: typeof defaultSanitize,
   searchWords: Array<string>,
   textToHighlight: string,
+  htmlText?: boolean
 }): Array<Chunk> => {
   textToHighlight = sanitize(textToHighlight)
+  const htmlTagLocation = htmlText ? findHtmlTagLocations(textToHighlight) : []
 
   return searchWords
     .filter(searchWord => searchWord) // Remove empty words
@@ -109,7 +115,13 @@ const defaultFindChunks = ({
         let end = regex.lastIndex
         // We do not return zero-length matches
         if (end > start) {
-          chunks.push({highlight: false, start, end})
+          if (htmlText) {
+            if (!isInTag(start, end, htmlTagLocation)) {
+              chunks.push({highlight: false, start, end})
+            }
+          } else {
+            chunks.push({highlight: false, start, end})
+          }
         }
 
         // Prevent browsers like Firefox from getting stuck in an infinite loop
@@ -171,4 +183,32 @@ function defaultSanitize (string: string): string {
 
 function escapeRegExpFn (string: string): string {
   return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+}
+
+function findHtmlTagLocations(text: string): object[] {
+  // Stolen from here: https://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx/
+  const tagExp = new RegExp(/<\/?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[\^'">\s]+))?)+\s*|\s*)\/?>/, 'g')
+  const locations = []
+
+  let match
+  while ((match = tagExp.exec(text))) {
+    locations.push({start: match.index, end: tagExp.lastIndex})
+
+    // Prevent browsers like Firefox from getting stuck in an infinite loop
+    // See http://www.regexguru.com/2008/04/watch-out-for-zero-length-matches/
+    if (match.index === tagExp.lastIndex) {
+      tagExp.lastIndex++
+    }
+  }
+
+  return locations
+}
+
+function isInTag(start: number, end: number, htmlTagLocation: object[]): boolean {
+  for (const location of htmlTagLocation) {
+    if (start > location.start && end < location.end) {
+      return true
+    }
+  }
+  return false
 }
