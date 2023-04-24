@@ -11,7 +11,7 @@ export type Chunk = {|
  * @return Array of "chunks" (where a Chunk is { start:number, end:number, highlight:boolean })
  */
 export const findAll = ({
-  autoEscape,
+  autoEscape = true,
   caseSensitive = false,
   findChunks = defaultFindChunks,
   sanitize,
@@ -78,7 +78,7 @@ export const combineChunks = ({
  * @return {start:number, end:number}[]
  */
 const defaultFindChunks = ({
-  autoEscape,
+  autoEscape = true,
   caseSensitive,
   sanitize = defaultSanitize,
   searchWords,
