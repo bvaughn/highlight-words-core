@@ -1,6 +1,6 @@
-import * as Chunks from './utils.js'
-import expect from 'expect.js'
-import latinize from 'latinize'
+const Chunks = require('../dist/highlight-words-core.umd')
+const expect = require('expect.js')
+const latinize = require('latinize')
 
 describe('utils', () => {
   // Positions: 01234567890123456789012345678901234567
