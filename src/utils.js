@@ -57,9 +57,9 @@ export const combineChunks = ({
       } else {
         // ... subsequent chunks get checked to see if they overlap...
         const prevChunk = processedChunks.pop()
-        if (nextChunk.start <= prevChunk.end) {
+        if (nextChunk.start < prevChunk.end) {
           // It may be the case that prevChunk completely surrounds nextChunk, so take the
-          // largest of the end indeces.
+          // largest of the end indexes.
           const endIndex = Math.max(prevChunk.end, nextChunk.end)
           processedChunks.push({highlight: false, start: prevChunk.start, end: endIndex})
         } else {
